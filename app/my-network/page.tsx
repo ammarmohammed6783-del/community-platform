@@ -1,6 +1,6 @@
 export default function MyNetwork() {
     return (
-        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="w-2/3 mx-auto py-10">
             <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-8 shadow-xl dark:shadow-2xl text-center">
                 <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                     My Network
@@ -11,4 +11,4 @@ export default function MyNetwork() {
             </div>
         </div>
     );
-}
+}
