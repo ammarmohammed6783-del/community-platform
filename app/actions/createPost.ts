@@ -1,8 +1,8 @@
-// app/actions/createPost.ts
 "use server";
 
 import { prisma } from "@/app/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getCurrentUser } from "@/app/lib/auth";
 
 export type CreatePostState = {
   error?: string;
@@ -10,9 +10,15 @@ export type CreatePostState = {
 };
 
 export async function createPost(
-  prevstate:CreatePostState,
+  prevstate: CreatePostState,
   formData: FormData
 ): Promise<CreatePostState> {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return { error: "You must be logged in to post" };
+  }
+
   const content = formData.get("content") as string;
 
   if (!content?.trim()) {
@@ -22,7 +28,7 @@ export async function createPost(
   await prisma.post.create({
     data: {
       content,
-      authorId: "wait until validation",
+      authorId: user.id,
     },
   });
 

@@ -8,7 +8,6 @@ export default function SignupPage() {
   const router = useRouter();
   const [form, setForm] = useState({
     email: "",
-    username: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -68,28 +67,6 @@ export default function SignupPage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Username */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-              Username
-            </label>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-purple-500 transition-colors">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Choose a username"
-                required
-                className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700/80 bg-slate-50/80 dark:bg-slate-950/80 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all duration-200"
-                value={form.username}
-                onChange={(e) => setForm({ ...form, username: e.target.value })}
-              />
-            </div>
-          </div>
-
           {/* Email */}
           <div className="space-y-1.5">
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">

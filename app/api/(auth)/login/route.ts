@@ -1,23 +1,23 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../lib/prisma";
-import { hashPassword, signToken } from "../../../lib/auth";
+import { prisma } from "@/app/lib/prisma";
+import { verifyPassword, signToken } from "@/app/lib/auth";
 
 export async function POST(req: Request) {
-  const { email, password, name, username } = await req.json();
+  const { email, password } = await req.json();
 
-  if (!email || !password || !name || !username) {
-    return NextResponse.json({ error: "Email and password and name and username required" }, { status: 400 });
+  if (!email || !password) {
+    return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
   }
 
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    return NextResponse.json({ error: "Email already in use" }, { status: 409 });
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
   }
 
-  const hashed = await hashPassword(password);
-  const user = await prisma.user.create({
-    data: { email, password: hashed, name, username },
-  });
+  const validPassword = await verifyPassword(password, user.password);
+  if (!validPassword) {
+    return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+  }
 
   const token = signToken({ userId: user.id });
 
