@@ -7,6 +7,7 @@ import Link from "next/link";
 export default function SignupPage() {
   const router = useRouter();
   const [form, setForm] = useState({
+    name: "",
     email: "",
     password: "",
   });
@@ -67,6 +68,28 @@ export default function SignupPage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Name */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Full Name
+            </label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 group-focus-within:text-purple-500 transition-colors">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-8 9a4 4 0 014-4h0a4 4 0 014 4v1H8v-1z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="John Doe"
+                required
+                className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700/80 bg-slate-50/80 dark:bg-slate-950/80 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all duration-200"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+            </div>
+          </div>
+
           {/* Email */}
           <div className="space-y-1.5">
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">

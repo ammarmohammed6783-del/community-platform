@@ -129,6 +129,11 @@ export default function Profile() {
                             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full shadow-sm shadow-indigo-500/50" />
                         )}
                     </button>
+                    <button
+                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer`}
+                    >
+                        friend request
+                    </button>
                 </div>
 
                 {/* Tab Content */}
