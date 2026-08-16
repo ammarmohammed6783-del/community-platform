@@ -1,10 +1,11 @@
-"use client";
+"use client"
 
 import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import CreatePost from "@/component/CreatePost";
 import { acceptFollow } from "@/app/actions/acceptFollow";
 import { getPendingRequests } from "@/app/actions/getPendingRequests";
+import getUserData from "@/app/actions/getUserData";
 
 type PendingRequest = {
     id: string;
@@ -16,6 +17,14 @@ type PendingRequest = {
     };
 };
 
+type CurrentUser = {
+    id: string;
+    name: string | null;
+    username: string;
+    email: string;
+    _count: { followers: number; following: number; posts: number };
+};
+
 export default function Profile() {
     const router = useRouter();
     const [theme, setTheme] = useState(false);
@@ -23,6 +32,7 @@ export default function Profile() {
     const [loggingOut, setLoggingOut] = useState(false);
     const [isPending, startTransition] = useTransition();
     const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([]);
+    const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -33,6 +43,10 @@ export default function Profile() {
 
     useEffect(() => {
         getPendingRequests().then(setPendingRequests);
+    }, []);
+
+    useEffect(() => {
+        getUserData().then(setCurrentUser);
     }, []);
 
     const toggleTheme = () => {
@@ -70,20 +84,20 @@ export default function Profile() {
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-xl dark:shadow-2xl dark:shadow-indigo-950/20 transition-colors duration-300">
                 {/* Profile Header Section */}
-                <div className="space-y-6 pb-8 border-b border-slate-200 dark:border-slate-800/80">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                <div className="space-y-6 pb-4 border-b border-slate-200 dark:border-slate-800/80">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                         <div className="flex items-center gap-5">
                             <div className="relative shrink-0">
                                 <div className="rounded-full w-20 h-20 sm:w-24 sm:h-24 flex justify-center items-center bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold text-2xl shadow-lg shadow-indigo-500/25 ring-4 ring-slate-200 dark:ring-slate-800/80 transition-transform duration-300 hover:scale-105">
-                                    AM
+                                    {currentUser?.name?.slice(0, 1).toUpperCase()}
                                 </div>
                                 <span className="absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-4 ring-white dark:ring-slate-900" />
                             </div>
                             <div className="min-w-0">
                                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-100 dark:to-slate-300 bg-clip-text text-transparent truncate">
-                                    Ammar Mohammed
+                                    {currentUser?.name}
                                 </h1>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">@ammar_mohammed</p>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{currentUser?.username}</p>
                             </div>
                         </div>
 
@@ -108,21 +122,6 @@ export default function Profile() {
                     <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-2xl">
                         Full stack developer building modern community platforms. Let's talk about Next.js web architecture and UI design!
                     </p>
-
-                    <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-slate-700 dark:text-slate-300 font-medium">
-                        <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/60">
-                            <span className="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">following</span>
-                            <span className="font-bold text-slate-900 dark:text-white">150</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/60">
-                            <span className="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">followers</span>
-                            <span className="font-bold text-slate-900 dark:text-white">250</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/60">
-                            <span className="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">posts</span>
-                            <span className="font-bold text-slate-900 dark:text-white">120</span>
-                        </div>
-                    </div>
                 </div>
 
                 {/* Tabs Section */}
@@ -130,8 +129,8 @@ export default function Profile() {
                     <button
                         onClick={() => setActiveTab("saved")}
                         className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${activeTab === "saved"
-                                ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-                                : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                            ? "text-indigo-600 dark:text-indigo-400 font-semibold"
+                            : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                             }`}
                     >
                         Saved posts
@@ -142,8 +141,8 @@ export default function Profile() {
                     <button
                         onClick={() => setActiveTab("liked")}
                         className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${activeTab === "liked"
-                                ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-                                : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                            ? "text-indigo-600 dark:text-indigo-400 font-semibold"
+                            : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                             }`}
                     >
                         Liked posts
@@ -154,8 +153,8 @@ export default function Profile() {
                     <button
                         onClick={() => setActiveTab("requests")}
                         className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${activeTab === "requests"
-                                ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-                                : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                            ? "text-indigo-600 dark:text-indigo-400 font-semibold"
+                            : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                             }`}
                     >
                         Friend requests
@@ -234,9 +233,9 @@ export default function Profile() {
             <div className="mt-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-xl dark:shadow-2xl dark:shadow-indigo-950/20 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight bg-gradient-to-r from-slate-900 via-indigo-600 to-purple-600 dark:from-white dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
+                        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight bg-gradient-to-r from-slate-900 via-indigo-600 to-purple-600 dark:from-white dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
                             My Analytics
-                        </h1>
+                        </h2>
                         <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
                             Track your profile views, post engagement, and connection growth.
                         </p>
@@ -245,11 +244,11 @@ export default function Profile() {
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-slate-200/80 dark:border-slate-800/80">
                     <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
-                        <span className="block text-lg font-bold text-slate-900 dark:text-white">150</span>
+                        <span className="block text-lg font-bold text-slate-900 dark:text-white">{currentUser?._count.following ?? 0}</span>
                         <span className="text-[10px] uppercase font-bold text-slate-400">Connections</span>
                     </div>
                     <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
-                        <span className="block text-lg font-bold text-slate-900 dark:text-white">250</span>
+                        <span className="block text-lg font-bold text-slate-900 dark:text-white">{currentUser?._count.followers ?? 0}</span>
                         <span className="text-[10px] uppercase font-bold text-slate-400">Followers</span>
                     </div>
                     <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
@@ -257,8 +256,8 @@ export default function Profile() {
                         <span className="text-[10px] uppercase font-bold text-slate-400">Pending</span>
                     </div>
                     <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
-                        <span className="block text-lg font-bold text-slate-900 dark:text-white">4</span>
-                        <span className="text-[10px] uppercase font-bold text-slate-400">Invitations</span>
+                        <span className="block text-lg font-bold text-slate-900 dark:text-white">{currentUser?._count.posts ?? 0}</span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400">Posts</span>
                     </div>
                 </div>
             </div>
