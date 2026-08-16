@@ -13,8 +13,18 @@ export default async function FeedPage() {
       author: {
         select: {
           name: true,
-          followers: { select: { followerId: true } }, // who follows the author
-          following: { select: { followingId: true } }, // who the author follows
+          followers: {
+            select: {
+              followerId: true,
+              status: true,
+            },
+          },
+          following: {
+            select: {
+              followingId: true,
+              status: true,
+            },
+          },
         },
       },
       likes: true,
@@ -34,22 +44,25 @@ export default async function FeedPage() {
         </p>
       ) : (
         posts.map((post) => {
+          const currentUserId = currentUser?.id;
+
           const isFollowingAuthor = post.author.followers.some(
-            (f) => f.followerId === currentUser?.id
+            (f) => f.followerId === currentUserId && f.status === "ACCEPTED"
           );
+
           const authorFollowsBack = post.author.following.some(
-            (f) => f.followingId === currentUser?.id
+            (f) => f.followingId === currentUserId && f.status === "ACCEPTED"
           );
 
           return (
             <Post
               key={post.id}
               post={post}
-              initialLiked={post.likes.some((l) => l.id === currentUser?.id)}
-              initialSaved={post.saves.some((s) => s.id === currentUser?.id)}
+              initialLiked={post.likes.some((l) => l.id === currentUserId)}
+              initialSaved={post.saves.some((s) => s.id === currentUserId)}
               initialFollowing={isFollowingAuthor}
-              isFriend={!!currentUser && isFollowingAuthor && authorFollowsBack}
-              currentUserId={currentUser?.id}
+              isFriend={!!currentUserId && isFollowingAuthor && authorFollowsBack}
+              currentUserId={currentUserId}
             />
           );
         })

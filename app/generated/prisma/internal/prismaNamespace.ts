@@ -847,6 +847,7 @@ export const FollowScalarFieldEnum = {
   id: 'id',
   followerId: 'followerId',
   followingId: 'followingId',
+  status: 'status',
   createdAt: 'createdAt'
 } as const
 
@@ -939,6 +940,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FollowStatus'
+ */
+export type EnumFollowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FollowStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'FollowStatus[]'
+ */
+export type ListEnumFollowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FollowStatus[]'>
     
 
 

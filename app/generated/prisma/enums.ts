@@ -9,7 +9,9 @@
 * 🟢 You can import this file directly.
 */
 
+export const FollowStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED'
+} as const
 
-
-// This file is empty because there are no enums in the schema.
-export {}
+export type FollowStatus = (typeof FollowStatus)[keyof typeof FollowStatus]

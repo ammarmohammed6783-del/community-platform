@@ -1,20 +1,38 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import CreatePost from "@/component/CreatePost";
+import { acceptFollow } from "@/app/actions/acceptFollow";
+import { getPendingRequests } from "@/app/actions/getPendingRequests";
+
+type PendingRequest = {
+    id: string;
+    followerId: string;
+    follower: {
+        id: string;
+        name: string | null;
+        username: string;
+    };
+};
 
 export default function Profile() {
     const router = useRouter();
     const [theme, setTheme] = useState(false);
-    const [status, setStatus] = useState(false);
+    const [activeTab, setActiveTab] = useState<"saved" | "liked" | "requests">("saved");
     const [loggingOut, setLoggingOut] = useState(false);
+    const [isPending, startTransition] = useTransition();
+    const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([]);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
             const isDark = document.documentElement.classList.contains("dark");
             setTheme(!isDark);
         }
+    }, []);
+
+    useEffect(() => {
+        getPendingRequests().then(setPendingRequests);
     }, []);
 
     const toggleTheme = () => {
@@ -39,6 +57,15 @@ export default function Profile() {
         router.refresh();
     };
 
+    const handleAccept = (followerId: string) => {
+        // optimistic removal from the list
+        setPendingRequests((prev) => prev.filter((r) => r.followerId !== followerId));
+
+        startTransition(async () => {
+            await acceptFollow(followerId);
+        });
+    };
+
     return (
         <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-xl dark:shadow-2xl dark:shadow-indigo-950/20 transition-colors duration-300">
@@ -60,7 +87,6 @@ export default function Profile() {
                             </div>
                         </div>
 
-                        {/* Action Buttons */}
                         <div className="flex items-center gap-3 shrink-0 flex-wrap">
                             <button className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white shadow-lg shadow-indigo-600/25 hover:shadow-indigo-600/40 transition-all duration-200 cursor-pointer">
                                 Edit profile
@@ -68,8 +94,6 @@ export default function Profile() {
                             <button className="px-5 py-2.5 rounded-xl text-sm font-semibold bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 active:bg-slate-200 dark:active:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700/80 transition-all duration-200 cursor-pointer">
                                 Share
                             </button>
-
-
 
                             <button
                                 onClick={toggleTheme}
@@ -81,12 +105,10 @@ export default function Profile() {
                         </div>
                     </div>
 
-                    {/* Bio */}
                     <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-2xl">
                         Full stack developer building modern community platforms. Let's talk about Next.js web architecture and UI design!
                     </p>
 
-                    {/* Stats */}
                     <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-slate-700 dark:text-slate-300 font-medium">
                         <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/60">
                             <span className="text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">following</span>
@@ -106,44 +128,86 @@ export default function Profile() {
                 {/* Tabs Section */}
                 <div className="flex items-center gap-6 pt-6 border-b border-slate-200 dark:border-slate-800/80 mb-6">
                     <button
-                        onClick={() => setStatus(true)}
-                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${status
+                        onClick={() => setActiveTab("saved")}
+                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${activeTab === "saved"
                                 ? "text-indigo-600 dark:text-indigo-400 font-semibold"
                                 : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                             }`}
                     >
                         Saved posts
-                        {status && (
+                        {activeTab === "saved" && (
                             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full shadow-sm shadow-indigo-500/50" />
                         )}
                     </button>
                     <button
-                        onClick={() => setStatus(false)}
-                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${!status
+                        onClick={() => setActiveTab("liked")}
+                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${activeTab === "liked"
                                 ? "text-indigo-600 dark:text-indigo-400 font-semibold"
                                 : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                             }`}
                     >
                         Liked posts
-                        {!status && (
+                        {activeTab === "liked" && (
                             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full shadow-sm shadow-indigo-500/50" />
                         )}
                     </button>
                     <button
-                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer`}
+                        onClick={() => setActiveTab("requests")}
+                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${activeTab === "requests"
+                                ? "text-indigo-600 dark:text-indigo-400 font-semibold"
+                                : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+                            }`}
                     >
-                        friend request
+                        Friend requests
+                        {pendingRequests.length > 0 && (
+                            <span className="ml-1.5 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-rose-500 rounded-full">
+                                {pendingRequests.length}
+                            </span>
+                        )}
+                        {activeTab === "requests" && (
+                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500 rounded-full shadow-sm shadow-indigo-500/50" />
+                        )}
                     </button>
                 </div>
 
                 {/* Tab Content */}
-                {status ? (
+                {activeTab === "saved" && (
                     <div className="p-8 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/60 text-slate-700 dark:text-slate-300 text-center font-medium shadow-inner">
                         No saved posts yet.
                     </div>
-                ) : (
+                )}
+
+                {activeTab === "liked" && (
                     <div className="p-8 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/60 text-slate-700 dark:text-slate-300 text-center font-medium shadow-inner">
                         No liked posts yet.
+                    </div>
+                )}
+
+                {activeTab === "requests" && (
+                    <div className="space-y-3">
+                        {pendingRequests.length === 0 ? (
+                            <div className="p-8 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/60 text-slate-700 dark:text-slate-300 text-center font-medium shadow-inner">
+                                No pending friend requests.
+                            </div>
+                        ) : (
+                            pendingRequests.map((req) => (
+                                <div
+                                    key={req.id}
+                                    className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/60"
+                                >
+                                    <span className="text-sm font-medium text-slate-900 dark:text-white">
+                                        {req.follower.name || req.follower.username}
+                                    </span>
+                                    <button
+                                        onClick={() => handleAccept(req.followerId)}
+                                        disabled={isPending}
+                                        className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 active:scale-95 transition-all shadow-md shadow-indigo-600/20 cursor-pointer disabled:opacity-50"
+                                    >
+                                        Accept
+                                    </button>
+                                </div>
+                            ))
+                        )}
                     </div>
                 )}
 
@@ -179,7 +243,6 @@ export default function Profile() {
                     </div>
                 </div>
 
-                {/* Quick Stats Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-slate-200/80 dark:border-slate-800/80">
                     <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
                         <span className="block text-lg font-bold text-slate-900 dark:text-white">150</span>
@@ -190,7 +253,7 @@ export default function Profile() {
                         <span className="text-[10px] uppercase font-bold text-slate-400">Followers</span>
                     </div>
                     <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
-                        <span className="block text-lg font-bold text-slate-900 dark:text-white">12</span>
+                        <span className="block text-lg font-bold text-slate-900 dark:text-white">{pendingRequests.length}</span>
                         <span className="text-[10px] uppercase font-bold text-slate-400">Pending</span>
                     </div>
                     <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
@@ -200,7 +263,6 @@ export default function Profile() {
                 </div>
             </div>
 
-            {/* Create Post Section */}
             <div className="mt-8">
                 <CreatePost />
             </div>

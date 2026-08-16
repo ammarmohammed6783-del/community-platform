@@ -91,6 +91,7 @@ export const FollowScalarFieldEnum = {
   id: 'id',
   followerId: 'followerId',
   followingId: 'followingId',
+  status: 'status',
   createdAt: 'createdAt'
 } as const
 
