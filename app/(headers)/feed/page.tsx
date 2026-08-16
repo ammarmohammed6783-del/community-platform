@@ -58,8 +58,8 @@ export default async function FeedPage() {
             <Post
               key={post.id}
               post={post}
-              initialLiked={post.likes.some((l) => l.id === currentUserId)}
-              initialSaved={post.saves.some((s) => s.id === currentUserId)}
+              initialLiked={post.likes.some((l) => l.userId === currentUserId)}
+              initialSaved={post.saves.some((s) => s.userId === currentUserId)}
               initialFollowing={isFollowingAuthor}
               isFriend={!!currentUserId && isFollowingAuthor && authorFollowsBack}
               currentUserId={currentUserId}
