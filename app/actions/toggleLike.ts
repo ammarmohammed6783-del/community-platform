@@ -1,26 +1,37 @@
+// app/actions/toggleLike.ts
 "use server";
 
 import { prisma } from "@/app/lib/prisma";
-import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/app/lib/auth";
+import { revalidatePath } from "next/cache";
 
 export async function toggleLike(postId: string) {
   const user = await getCurrentUser();
-  if (!user) {
-    return { error: "You must be logged in to like a post" };
-  }
+  if (!user) throw new Error("Unauthorized");
 
   const existingLike = await prisma.like.findUnique({
     where: {
-      userId_postId: { userId: user.id, postId },
+      userId_postId: {
+        userId: user.id,
+        postId: postId,
+      },
     },
   });
 
   if (existingLike) {
-    await prisma.like.delete({ where: { id: existingLike.id } });
+    // already liked -> remove it (unlike)
+    await prisma.like.delete({
+      where: { id: existingLike.id },
+    });
   } else {
-    await prisma.like.create({ data: { userId: user.id, postId } });
+    // not liked yet -> create it (like)
+    await prisma.like.create({
+      data: {
+        userId: user.id,
+        postId: postId,
+      },
+    });
   }
 
-  revalidatePath("/feed");
+  revalidatePath("/feed"); // or wherever your feed route is
 }

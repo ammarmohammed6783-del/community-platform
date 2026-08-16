@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { toggleLike } from "@/app/actions/toggleLike";
+import { toggleSave } from "@/app/actions/toggleSave";
 
 type PostType = {
   id: string | number;
@@ -34,6 +35,15 @@ export default function Post({
 
     startTransition(async () => {
       await toggleLike(post.id.toString());
+    });
+  };
+
+  const handleToggleSave = () => {
+    // optimistic UI update
+    setSaved((prev) => !prev);
+
+    startTransition(async () => {
+      await toggleSave(post.id.toString());
     });
   };
 
@@ -102,7 +112,7 @@ export default function Post({
         </div>
 
         <button
-          onClick={() => setSaved(!saved)}
+          onClick={handleToggleSave}
           className={`p-1.5 rounded-xl transition-all cursor-pointer ${
             saved
               ? "text-indigo-500 bg-indigo-500/10"

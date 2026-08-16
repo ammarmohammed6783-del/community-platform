@@ -2,6 +2,7 @@ import CreatePost from "@/component/CreatePost";
 import Post from "./component/Post";
 import { prisma } from "@/app/lib/prisma";
 import { getCurrentUser } from "@/app/lib/auth";
+import Link from "next/link";
 
 export default async function Feed() {
   const user = await getCurrentUser();
@@ -47,7 +48,7 @@ export default async function Feed() {
             <div className="space-y-1">
               <h3 className="text-base font-bold text-slate-900 dark:text-white">Please log in</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                You need to be signed in to view and interact with posts.
+                You need to be signed in to view and interact with posts, so <Link href="/login" className="text-indigo-500 font-bold hover:underline cursor-pointer">log in</Link> to continue.
               </p>
             </div>
           </div>

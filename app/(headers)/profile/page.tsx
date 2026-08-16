@@ -107,11 +107,10 @@ export default function Profile() {
                 <div className="flex items-center gap-6 pt-6 border-b border-slate-200 dark:border-slate-800/80 mb-6">
                     <button
                         onClick={() => setStatus(true)}
-                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${
-                            status
+                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${status
                                 ? "text-indigo-600 dark:text-indigo-400 font-semibold"
                                 : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
-                        }`}
+                            }`}
                     >
                         Saved posts
                         {status && (
@@ -120,11 +119,10 @@ export default function Profile() {
                     </button>
                     <button
                         onClick={() => setStatus(false)}
-                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${
-                            !status
+                        className={`pb-3 text-sm font-medium transition-all duration-200 relative cursor-pointer ${!status
                                 ? "text-indigo-600 dark:text-indigo-400 font-semibold"
                                 : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
-                        }`}
+                            }`}
                     >
                         Liked posts
                         {!status && (
@@ -160,6 +158,40 @@ export default function Profile() {
                         </svg>
                         <span>{loggingOut ? "Signing out..." : "Log out"}</span>
                     </button>
+                </div>
+            </div>
+
+            {/* Header Banner */}
+            <div className="mt-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 sm:p-8 shadow-xl dark:shadow-2xl dark:shadow-indigo-950/20 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight bg-gradient-to-r from-slate-900 via-indigo-600 to-purple-600 dark:from-white dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
+                            My Analytics
+                        </h1>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+                            Track your profile views, post engagement, and connection growth.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Quick Stats Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-slate-200/80 dark:border-slate-800/80">
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
+                        <span className="block text-lg font-bold text-slate-900 dark:text-white">150</span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400">Connections</span>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
+                        <span className="block text-lg font-bold text-slate-900 dark:text-white">250</span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400">Followers</span>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
+                        <span className="block text-lg font-bold text-slate-900 dark:text-white">12</span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400">Pending</span>
+                    </div>
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/60 text-center">
+                        <span className="block text-lg font-bold text-slate-900 dark:text-white">4</span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400">Invitations</span>
+                    </div>
                 </div>
             </div>
 
