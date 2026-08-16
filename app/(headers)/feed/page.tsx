@@ -9,9 +9,11 @@ export default async function Feed() {
 
   const posts = user
     ? await prisma.post.findMany({
-      where: { authorId: user.id },
       orderBy: { createdAt: "desc" },
       include: {
+        author: {
+          select: { name: true },
+        },
         _count: {
           select: { likes: true, saves: true },
         },

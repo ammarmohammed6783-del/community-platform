@@ -4,25 +4,31 @@ import { useState, useTransition } from "react";
 import { toggleLike } from "@/app/actions/toggleLike";
 import { toggleSave } from "@/app/actions/toggleSave";
 
-type PostType = {
-  id: string | number;
-  content: string;
-  createdAt?: Date;
-  _count: {
-    likes: number;
-    saves: number;
+interface PostProps {
+  post: {
+    id: string;
+    content: string;
+    createdAt: Date;
+    authorId: string;
+    author: {
+      name: string | null;
+    };
+    _count: {
+      likes: number;
+      saves: number;
+    };
+    likes: { id: string }[];
+    saves: { id: string }[];
   };
-};
+  initialLiked: boolean;
+  initialSaved: boolean;
+}
 
 export default function Post({
   post,
   initialLiked,
   initialSaved,
-}: {
-  post: PostType;
-  initialLiked: boolean;
-  initialSaved: boolean;
-}) {
+}: PostProps) {
   const [liked, setLiked] = useState(initialLiked);
   const [likeCount, setLikeCount] = useState(post._count.likes);
   const [saved, setSaved] = useState(initialSaved);
@@ -61,14 +67,20 @@ export default function Post({
           <div>
             <div className="flex items-center gap-1.5">
               <h3 className="font-bold text-slate-900 dark:text-white text-sm">
-                Community Member
+                {post.author.name || "Unknown Author"}
               </h3>
               <svg className="w-4 h-4 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Posted just now
+              {post.createdAt
+                ? new Date(post.createdAt).toLocaleDateString("en-US", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
+                : ""}
             </p>
           </div>
         </div>
@@ -91,11 +103,10 @@ export default function Post({
           <button
             onClick={handleToggleLike}
             disabled={isPending}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
-              liked
-                ? "text-rose-500 bg-rose-500/10 font-semibold"
-                : "hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
-            }`}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all cursor-pointer ${liked
+              ? "text-rose-500 bg-rose-500/10 font-semibold"
+              : "hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
+              }`}
           >
             <svg className="w-4 h-4" fill={liked ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -113,11 +124,10 @@ export default function Post({
 
         <button
           onClick={handleToggleSave}
-          className={`p-1.5 rounded-xl transition-all cursor-pointer ${
-            saved
-              ? "text-indigo-500 bg-indigo-500/10"
-              : "hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
-          }`}
+          className={`p-1.5 rounded-xl transition-all cursor-pointer ${saved
+            ? "text-indigo-500 bg-indigo-500/10"
+            : "hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
+            }`}
           title={saved ? "Unsave Post" : "Save Post"}
         >
           <svg className="w-4 h-4" fill={saved ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
