@@ -5,10 +5,18 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "../../lib/auth"; // adjust path: app/lib/auth.ts or lib/auth.ts
 import Post from "./component/Post"; // adjust path to match your actual folder structure
 
-export default async function FeedPage() {
+export default async function FeedPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const { q } = await searchParams;
+
   const currentUser = await getCurrentUser();
 
   const posts = await prisma.post.findMany({
+    where: q ? {
+      OR: [
+        { content: { contains: q, mode: "insensitive" } },
+        { author: { name: { contains: q, mode: "insensitive" } } },
+      ],
+    } : undefined,
     include: {
       author: {
         select: {

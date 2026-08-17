@@ -1,6 +1,30 @@
+"use client"
+
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useState, useTransition } from "react";
 import Link from "next/link";
 
 export default function Nav() {
+
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
+  const [isPending, startTransition] = useTransition();
+
+  function handleChange(value: string) {
+    setQuery(value);
+    const params = new URLSearchParams(searchParams);
+    if (value) {
+      params.set("q", value);
+    } else {
+      params.delete("q");
+    }
+    startTransition(() => {
+      router.push(`${pathname}?${params.toString()}`);
+    });
+  }
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/85 dark:bg-slate-950/85 border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,7 +43,13 @@ export default function Nav() {
 
           {/* Search bar */}
           <div className="hidden sm:flex items-center space-x-2 border border-slate-300 dark:border-slate-700/80 bg-slate-100/80 dark:bg-slate-900/80 hover:border-indigo-500/60 transition-all duration-300 rounded-lg shadow-sm max-w-xs w-full">
-            <input type="text" placeholder="Search..." className="w-full px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 bg-transparent focus:outline-none" />
+            <input
+              className="w-full px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 bg-transparent focus:outline-none"
+              type="text"
+              value={query}
+              onChange={(e) => handleChange(e.target.value)}
+              placeholder="Search..."
+            />
             <button className="px-3 py-1.5 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

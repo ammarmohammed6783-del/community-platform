@@ -10,12 +10,15 @@ const colors = [
   "from-blue-500 to-cyan-500",
 ];
 
-export default async function MyNetwork() {
+export default async function MyNetwork({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const currentUser = await getCurrentUser();
+
+  const { q } = await searchParams;
 
   const users = await prisma.user.findMany({
     where: {
       id: { not: currentUser?.id },
+      ...(q ? { name: { contains: q, mode: "insensitive" } } : {}),
     },
     select: {
       id: true,
