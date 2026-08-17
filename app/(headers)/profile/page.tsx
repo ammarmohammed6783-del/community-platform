@@ -134,7 +134,7 @@ export default function Profile() {
                         <div className="flex items-center gap-5">
 
                             <div className="relative shrink-0">
-                                <div className="rounded-full w-20 h-20 sm:w-24 sm:h-24 flex justify-center items-center bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold text-2xl shadow-lg shadow-indigo-500/25 ring-4 ring-slate-200 dark:ring-slate-800/80 transition-transform duration-300 hover:scale-105">
+                                <div className="rounded-full w-20 h-20 sm:w-24 sm:h-24 flex justify-center items-center bg-linear-to-tr from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold text-2xl shadow-lg shadow-indigo-500/25 ring-4 ring-slate-200 dark:ring-slate-800/80 transition-transform duration-300 hover:scale-105">
                                     {currentUser?.name
                                         ?.slice(0, 1)
                                         .toUpperCase()}
@@ -144,7 +144,7 @@ export default function Profile() {
                             </div>
 
                             <div className="min-w-0">
-                                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight bg-gradient-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-100 dark:to-slate-300 bg-clip-text text-transparent truncate">
+                                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight bg-linear-to-r from-slate-900 via-slate-800 to-slate-600 dark:from-white dark:via-slate-100 dark:to-slate-300 bg-clip-text truncate">
                                     {currentUser?.name}
                                 </h1>
 
@@ -323,7 +323,7 @@ export default function Profile() {
                 )}
 
                 {/* Account & Session Management */}
-                <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-rose-500/5 border border-rose-500/10">
+                <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-rose-500/5 border">
 
                     <div>
                         <h4 className="text-sm font-bold text-slate-900 dark:text-white">
@@ -369,7 +369,7 @@ export default function Profile() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 
                     <div>
-                        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight bg-gradient-to-r from-slate-900 via-indigo-600 to-purple-600 dark:from-white dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
+                        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight bg-linear-to-r from-slate-900 via-indigo-600 to-purple-600 dark:from-white dark:via-indigo-300 dark:to-purple-300 bg-clip-text">
                             My Analytics
                         </h2>
 

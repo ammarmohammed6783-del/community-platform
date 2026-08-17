@@ -1,8 +1,13 @@
 "use client"
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
+import getUserData from "@/app/actions/getUserData";
+
+type CurrentUser = {
+  name: string | null;
+};
 
 export default function Nav() {
 
@@ -11,6 +16,13 @@ export default function Nav() {
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [isPending, startTransition] = useTransition();
+
+  const [currentUser, setCurrentUser] =
+    useState<CurrentUser | null>(null);
+
+  useEffect(() => {
+    getUserData().then(setCurrentUser);
+  }, []);
 
   function handleChange(value: string) {
     setQuery(value);
@@ -98,7 +110,7 @@ export default function Nav() {
               className="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700/80 hover:border-indigo-500/60 hover:bg-slate-200 dark:hover:bg-slate-800/90 text-slate-800 dark:text-slate-200 transition-all duration-300 group shadow-sm"
             >
               <div className="relative flex items-center justify-center w-7 h-7 rounded-full bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 font-semibold text-xs border border-indigo-500/30">
-                <span className="relative z-10">MP</span>
+                <span className="relative z-10">{currentUser?.name?.slice(0, 1).toUpperCase()}</span>
                 <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-slate-100 dark:ring-slate-900" />
               </div>
               <span className="text-xs font-semibold tracking-wide text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white hidden sm:inline">
