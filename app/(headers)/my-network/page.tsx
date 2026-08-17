@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "../../lib/auth"; // adjust path to wherever this actually lives
+import { getCurrentUser } from "../../lib/auth";
 import UserCard from "./component/UserCard";
 import { UserType } from "@/app/types/userType";
 
@@ -27,17 +27,27 @@ export default async function MyNetwork({ searchParams }: { searchParams: Promis
       _count: {
         select: { followers: true },
       },
+      followers: {
+        where: { followerId: currentUser?.id },
+        select: { status: true },
+      },
     },
   });
 
-  const people: UserType[] = users ? users.map((user, i) => ({
-    id: user.id,
-    name: user.name ?? user.username,
-    title: "Member",
-    followers: user._count.followers,
-    initial: (user.name ?? user.username).charAt(0).toUpperCase(),
-    color: colors[i % colors.length],
-  })) : [];
+  const people: UserType[] = users.map((user, i) => {
+    const followRecord = user.followers[0];
+
+    return {
+      id: user.id,
+      name: user.name ?? user.username,
+      title: "Member",
+      followers: user._count.followers,
+      initial: (user.name ?? user.username).charAt(0).toUpperCase(),
+      color: colors[i % colors.length],
+      isFollowing: !!followRecord && (followRecord.status === "PENDING" || followRecord.status === "ACCEPTED"),
+      isPending: followRecord?.status === "PENDING",
+    };
+  });
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -50,7 +60,7 @@ export default async function MyNetwork({ searchParams }: { searchParams: Promis
           people.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {people.map((person) => (
-                <UserCard key={person.id} person={person} />
+                <UserCard key={person.id} person={person} isFollowing={person.isFollowing} />
               ))}
             </div>
           ) : (

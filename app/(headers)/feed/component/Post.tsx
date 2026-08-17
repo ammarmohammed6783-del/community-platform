@@ -85,7 +85,7 @@ export default function Post({
       <div className="flex items-center justify-between relative">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-indigo-500/20">
+            <div className="w-11 h-11 rounded-2xl bg-linear-to-tr from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-indigo-500/20">
               MP
             </div>
             <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />

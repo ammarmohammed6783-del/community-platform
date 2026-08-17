@@ -55,7 +55,7 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
           const currentUserId = currentUser?.id;
 
           const isFollowingAuthor = post.author.followers.some(
-            (f) => f.followerId === currentUserId && f.status === "ACCEPTED"
+            (f) => f.followerId === currentUserId && (f.status === "PENDING" || f.status === "ACCEPTED")
           );
 
           const authorFollowsBack = post.author.following.some(

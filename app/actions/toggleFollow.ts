@@ -32,5 +32,6 @@ export async function toggleFollow(followingId: string) {
         });
     }
 
-    revalidatePath("/");
+    revalidatePath("/feed");
+    revalidatePath("/my-network");
 }
