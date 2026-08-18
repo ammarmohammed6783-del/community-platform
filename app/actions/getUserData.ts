@@ -1,24 +1,31 @@
-"use server"
+"use server";
 
-import { getCurrentUser } from "../lib/auth";
-import { prisma } from "@/app/lib/prisma"; // adjust to your actual prisma client path
+import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/app/lib/auth";
 
 export default async function getUserData() {
-    const authUser = await getCurrentUser();
-    if (!authUser) return null;
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser?.id) {
+        return null;
+    }
 
     return await prisma.user.findUnique({
-        where: { id: authUser.id },
+        where: {
+            id: currentUser.id,
+        },
         select: {
             id: true,
             email: true,
             username: true,
             name: true,
+            description: true,
+            profilePhoto: true,
             _count: {
                 select: {
-                    followers: true,
-                    following: true,
                     posts: true,
+                    following: true,
+                    followers: true,
                 },
             },
         },

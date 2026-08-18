@@ -4,6 +4,7 @@ import { useState, useTransition, useRef, useEffect } from "react";
 import { toggleLike } from "@/app/actions/toggleLike";
 import { toggleSave } from "@/app/actions/toggleSave";
 import { toggleFollow } from "@/app/actions/toggleFollow";
+import getUserData from "@/app/actions/getUserData";
 
 interface PostProps {
   post: {
@@ -80,16 +81,35 @@ export default function Post({
 
   const isOwnPost = currentUserId === post.authorId;
 
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+
+  type CurrentUser = {
+    profilePhoto: string | null;
+    name: string | null;
+  };
+
+  useEffect(() => {
+    getUserData().then(setCurrentUser);
+  }, []);
+
   return (
     <article className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm hover:shadow-md dark:shadow-2xl dark:shadow-indigo-950/10 transition-all duration-300 space-y-4">
       <div className="flex items-center justify-between relative">
         <div className="flex items-center gap-3">
-          <div className="relative">
-            <div className="w-11 h-11 rounded-2xl bg-linear-to-tr from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-indigo-500/20">
-              MP
-            </div>
-            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
-          </div>
+          {
+            currentUser?.profilePhoto ? (
+              <img
+                src={currentUser.profilePhoto}
+                alt="Profile"
+                className="w-11 h-11 rounded-full object-cover border border-indigo-500/30"
+              />
+            ) : (<div className="relative">
+              <div className="w-11 h-11 rounded-2xl bg-linear-to-tr from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-indigo-500/20">
+                MP
+              </div>
+              <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
+            </div>)
+          }
           <div>
             <div className="flex items-center gap-1.5">
               <h3 className="font-bold text-slate-900 dark:text-white text-sm">
@@ -165,7 +185,7 @@ export default function Post({
           <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200 transition-all cursor-pointer">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
+            </svg>
             <span>Comment</span>
           </button>
         </div>
