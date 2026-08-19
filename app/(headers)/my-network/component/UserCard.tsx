@@ -17,9 +17,15 @@ export default function UserCard({ person, isFollowing }: { person: UserType, is
     return <div
         className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 rounded-3xl p-5 flex flex-col items-center text-center space-y-3 shadow-sm hover:shadow-md transition-all duration-300 group"
     >
-        <div className={`w-16 h-16 rounded-2xl bg-linear-to-tr ${person.color} text-white font-extrabold text-lg flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform`}>
-            {person.initial}
-        </div>
+        {
+            person.profilePhoto ? (
+                <img src={person.profilePhoto} alt="" />
+            ) : (
+                <div className={`w-16 h-16 rounded-2xl bg-linear-to-tr ${person.color} text-white font-extrabold text-lg flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform`}>
+                    <div>{person.initial}</div>
+                </div>
+            )
+        }
         <div>
             <h3 className="font-bold text-slate-900 dark:text-white text-sm">
                 {person.name}

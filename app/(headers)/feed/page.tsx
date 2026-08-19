@@ -4,6 +4,7 @@
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "../../lib/auth"; // adjust path: app/lib/auth.ts or lib/auth.ts
 import Post from "./component/Post"; // adjust path to match your actual folder structure
+import CreatePost from "@/component/CreatePost";
 
 export default async function FeedPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q } = await searchParams;
@@ -20,6 +21,7 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
     include: {
       author: {
         select: {
+          profilePhoto: true,
           name: true,
           followers: {
             select: {
@@ -46,6 +48,8 @@ export default async function FeedPage({ searchParams }: { searchParams: Promise
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <CreatePost userProfileImg={currentUser?.profilePhoto} userName={currentUser?.name ?? "unknown"}/>
+
       {posts.length === 0 ? (
         <p className="text-center text-slate-500 dark:text-slate-400 py-12">
           No posts yet. Be the first to share something!

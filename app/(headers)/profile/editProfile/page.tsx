@@ -7,6 +7,7 @@ import {
     CldUploadButton,
     type CloudinaryUploadWidgetResults,
 } from "next-cloudinary";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type CurrentUser = {
@@ -18,6 +19,8 @@ type CurrentUser = {
 };
 
 export default function EditProfile() {
+    const router = useRouter();
+
     const [user, setUser] = useState<CurrentUser | null>(null);
 
     const [profileImagePreview, setProfileImagePreview] =
@@ -141,6 +144,9 @@ export default function EditProfile() {
             }
 
             setNewProfilePhoto(null);
+
+            router.back();
+            router.refresh()
         } catch (error) {
             console.error(error);
             setErrorMessage("Failed to update profile");

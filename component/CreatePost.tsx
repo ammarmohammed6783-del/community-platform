@@ -5,7 +5,7 @@ import { createPost, CreatePostState } from "@/app/actions/createPost";
 
 const initialState: CreatePostState = {};
 
-export default function CreatePost() {
+export default function CreatePost({ userProfileImg, userName }: { userProfileImg: string | null | undefined, userName: string }) {
   const [visible, setVisible] = useState(false);
   const [textLength, setTextLength] = useState(0);
   const toggleIt = () => setVisible(!visible);
@@ -23,9 +23,19 @@ export default function CreatePost() {
     <div className="w-full my-6">
       {/* Trigger Card */}
       <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-4 sm:p-5 shadow-sm hover:shadow-md dark:shadow-2xl dark:shadow-indigo-950/20 transition-all duration-300 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-500 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-md shadow-indigo-500/20">
-          MP
-        </div>
+        {
+          userProfileImg ? (
+            <img
+              src={userProfileImg}
+              alt={userName}
+              className="w-10 h-10 rounded-2xl object-cover shrink-0 shadow-md shadow-indigo-500/20"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-2xl bg-linear-to-tr from-indigo-600 to-purple-500 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-md shadow-indigo-500/20">
+              {userName.slice(0, 1)}
+            </div>
+          )
+        }
         <button
           className="flex-1 text-left px-4 py-2.5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-100/70 dark:bg-slate-950/60 hover:bg-slate-200/60 dark:hover:bg-slate-800/80 text-slate-500 dark:text-slate-400 text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer"
           onClick={toggleIt}
@@ -34,7 +44,7 @@ export default function CreatePost() {
         </button>
         <button
           onClick={toggleIt}
-          className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-95 text-white font-semibold text-xs sm:text-sm shadow-md shadow-indigo-500/25 transition-all duration-200 cursor-pointer shrink-0"
+          className="px-4 py-2.5 rounded-2xl bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 active:scale-95 text-white font-semibold text-xs sm:text-sm shadow-md shadow-indigo-500/25 transition-all duration-200 cursor-pointer shrink-0"
         >
           Post
         </button>
@@ -47,7 +57,7 @@ export default function CreatePost() {
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-500 text-white font-bold text-xs flex items-center justify-center shadow-md">
+                <div className="w-10 h-10 rounded-2xl bg-linear-to-tr from-indigo-600 to-purple-500 text-white font-bold text-xs flex items-center justify-center shadow-md">
                   MP
                 </div>
                 <div>

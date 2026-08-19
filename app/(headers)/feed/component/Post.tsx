@@ -4,7 +4,6 @@ import { useState, useTransition, useRef, useEffect } from "react";
 import { toggleLike } from "@/app/actions/toggleLike";
 import { toggleSave } from "@/app/actions/toggleSave";
 import { toggleFollow } from "@/app/actions/toggleFollow";
-import getUserData from "@/app/actions/getUserData";
 
 interface PostProps {
   post: {
@@ -14,6 +13,7 @@ interface PostProps {
     authorId: string;
     author: {
       name: string | null;
+      profilePhoto: string | null,
     };
     _count: {
       likes: number;
@@ -81,34 +81,25 @@ export default function Post({
 
   const isOwnPost = currentUserId === post.authorId;
 
-  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
-
-  type CurrentUser = {
-    profilePhoto: string | null;
-    name: string | null;
-  };
-
-  useEffect(() => {
-    getUserData().then(setCurrentUser);
-  }, []);
-
   return (
     <article className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm hover:shadow-md dark:shadow-2xl dark:shadow-indigo-950/10 transition-all duration-300 space-y-4">
       <div className="flex items-center justify-between relative">
         <div className="flex items-center gap-3">
           {
-            currentUser?.profilePhoto ? (
+            post?.author?.profilePhoto ? (
               <img
-                src={currentUser.profilePhoto}
-                alt="Profile"
+                src={post.author.profilePhoto}
+                alt={post.author.name || "Profile"}
                 className="w-11 h-11 rounded-full object-cover border border-indigo-500/30"
               />
-            ) : (<div className="relative">
-              <div className="w-11 h-11 rounded-2xl bg-linear-to-tr from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-indigo-500/20">
-                MP
+            ) : (
+              <div className="relative">
+                <div className="w-11 h-11 rounded-2xl bg-linear-to-tr from-indigo-600 via-indigo-500 to-purple-500 text-white font-bold text-sm flex items-center justify-center shadow-md shadow-indigo-500/20">
+                  {post.author.name?.[0]?.toUpperCase() || "unKnown"}
+                </div>
+                <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
               </div>
-              <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
-            </div>)
+            )
           }
           <div>
             <div className="flex items-center gap-1.5">

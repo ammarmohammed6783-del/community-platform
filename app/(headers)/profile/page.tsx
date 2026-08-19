@@ -270,7 +270,6 @@ export default function Profile() {
                         <div className="flex items-center gap-5">
 
                             <div className="relative shrink-0">
-
                                 {userLoading ? (
                                     <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-200 dark:bg-slate-800 animate-pulse" />
                                 ) : currentUser?.profilePhoto ? (
@@ -625,7 +624,7 @@ export default function Profile() {
 
             {/* Create Post */}
             <div className="mt-8">
-                <CreatePost />
+                <CreatePost userProfileImg={currentUser?.profilePhoto} userName={currentUser?.name ?? "unknown"}/>
             </div>
         </div>
     );

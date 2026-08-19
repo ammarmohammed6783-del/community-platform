@@ -27,6 +27,7 @@ export default async function MyNetwork({ searchParams }: { searchParams: Promis
       _count: {
         select: { followers: true },
       },
+      profilePhoto: true,
       followers: {
         where: { followerId: currentUser?.id },
         select: { status: true },
@@ -43,6 +44,7 @@ export default async function MyNetwork({ searchParams }: { searchParams: Promis
       title: "Member",
       followers: user._count.followers,
       initial: (user.name ?? user.username).charAt(0).toUpperCase(),
+      profilePhoto: user.profilePhoto,
       color: colors[i % colors.length],
       isFollowing: !!followRecord && (followRecord.status === "PENDING" || followRecord.status === "ACCEPTED"),
       isPending: followRecord?.status === "PENDING",
