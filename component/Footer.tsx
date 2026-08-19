@@ -46,13 +46,18 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-slate-900 dark:hover:text-white transition-colors duration-200">
-                  About
+                <Link href="/feed" className="hover:text-slate-900 dark:hover:text-white transition-colors duration-200">
+                  Feed
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-slate-900 dark:hover:text-white transition-colors duration-200">
-                  Contact
+                <Link href="/my-network" className="hover:text-slate-900 dark:hover:text-white transition-colors duration-200">
+                  My netwrok
+                </Link>
+              </li>
+              <li>
+                <Link href="/profile" className="hover:text-slate-900 dark:hover:text-white transition-colors duration-200">
+                  My profile
                 </Link>
               </li>
             </ul>
