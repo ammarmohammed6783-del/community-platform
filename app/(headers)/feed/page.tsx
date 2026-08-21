@@ -3,7 +3,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "../../lib/auth"; // adjust path: app/lib/auth.ts or lib/auth.ts
-import Post from "./component/Post"; // adjust path to match your actual folder structure
+import Post from "./components/Post"; // adjust path to match your actual folder structure
 import CreatePost from "@/component/CreatePost";
 
 export default async function FeedPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {

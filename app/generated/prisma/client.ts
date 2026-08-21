@@ -57,6 +57,11 @@ export type Follow = Prisma.FollowModel
  */
 export type Post = Prisma.PostModel
 /**
+ * Model Comment
+ * 
+ */
+export type Comment = Prisma.CommentModel
+/**
  * Model Like
  * 
  */

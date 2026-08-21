@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Follow: 'Follow',
   Post: 'Post',
+  Comment: 'Comment',
   Like: 'Like',
   Save: 'Save'
 } as const
@@ -109,6 +110,17 @@ export const PostScalarFieldEnum = {
 } as const
 
 export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+
+
+export const CommentScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  createdAt: 'createdAt',
+  authorId: 'authorId',
+  postId: 'postId'
+} as const
+
+export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
 export const LikeScalarFieldEnum = {

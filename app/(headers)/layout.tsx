@@ -1,4 +1,6 @@
 import Nav from "@/component/Nav";
+import type { ReactNode } from 'react';
+import { AblyProvider } from '../ably/AblyProvider';
 
 export default function HeadersLayout({
   children,
@@ -8,7 +10,10 @@ export default function HeadersLayout({
   return (
     <div className="flex-1 flex flex-col min-h-screen">
       <Nav />
-      <main className="flex-1 flex flex-col">{children}</main>
+
+      <AblyProvider>
+        <main className="flex-1 flex flex-col">{children}</main>
+      </AblyProvider>
     </div>
   );
 }

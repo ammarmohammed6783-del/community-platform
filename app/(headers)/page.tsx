@@ -1,6 +1,7 @@
 "use client";
 
 import Footer from "@/component/Footer";
+import { ConnectionState } from "../ably/ConnectionState";
 
 export default function Home() {
   return (
@@ -10,7 +11,7 @@ export default function Home() {
           <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400 animate-pulse" />
           <span>Welcome to Let's talk</span>
         </div>
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent max-w-3xl leading-tight">
+        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight bg-linear-to-r from-slate-900 via-slate-700 to-slate-500 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent max-w-3xl leading-tight">
           Connect, Share & Grow Together
         </h1>
         <p className="mt-4 text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
@@ -19,6 +20,7 @@ export default function Home() {
       </div>
 
       <Footer />
+      <ConnectionState />
     </div>
   );
 }

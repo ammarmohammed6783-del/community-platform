@@ -11,7 +11,7 @@ import getUserData from "@/app/actions/getUserData";
 import getSavedPosts from "@/app/actions/getSavedPosts";
 import getLikedPosts from "@/app/actions/getLikedPosts";
 
-import Post from "../feed/component/Post";
+import Post from "../feed/components/Post";
 import { CiSettings } from "react-icons/ci";
 
 type PendingRequest = {
